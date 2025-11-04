@@ -1,0 +1,20 @@
+[
+    {
+        "mode": "Car",
+        "speed_kmh": 50,
+        "cost_per_km": 4,
+        "co2_per_km": 120
+    },
+    {
+        "mode": "Bicycle",
+        "speed_kmh": 15,
+        "cost_per_km": 0,
+        "co2_per_km": 0
+    },
+    {
+        "mode": "Walking",
+        "speed_kmh": 5,
+        "cost_per_km": 0,
+        "co2_per_km": 0
+    }
+]
