@@ -1,7 +1,15 @@
 from .validation import (validate_customer_name, validate_priority, validate_latitude, validate_longitude, validate_weight)
-from .optimizer import optimizer
+from .optimizer import (calculate_distance, calculate_transport_modes, save_final_route, save_route_summary, print_route_summary)
+from .utils import view_csv_file, timed
 import csv
+import logging 
+import time
 
+# Logging configuration
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', filename='output/run.log', filemode='a')
+stats = {'start_time': None, 'end_time': None}
+
+@timed
 def validate_inputs(deliveries_file):
     with open(deliveries_file, 'r') as f:
         lines = f.read().splitlines()[1:] 
@@ -24,27 +32,33 @@ def validate_inputs(deliveries_file):
                 writer.writerow([customer, latitude, longitude, priority, weight_kg])
             print(f"Invalid: {line}")
             
-def run_optimizer():
-    optimizer('output/valid.csv')
             
-def view_csv_file(file_path):
-    with open(file_path, 'r') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            print(row)
+def print_stats():
+    elapsed_time = stats['end_time'] - stats['start_time']
+    logging.info(f"Validation completed in {elapsed_time:.2f} seconds")
+    print("=" * 40)
+    print(f"Start time:      {time.strftime('%H:%M:%S', time.localtime(stats['start_time']))}")
+    print(f"End time:        {time.strftime('%H:%M:%S', time.localtime(stats['end_time']))}")
+    print(f"Elapsed:         {elapsed_time:.2f}s")
+    print("=" * 40)
+    
 
 def main():
+    import time as timemodule
     while True: 
         print("\n==============================")
         print(" Smart Courier Main Menu ")
         print("==============================")
         print("1. Start Validation and Optimization Process")
         print("2. Reset Output Files (recommended before new runs)")
-        print("3. Exit")
-        choice = input("\nPlease enter your choice (1-3): ")
+        print("3. Open Output Files Manually")
+        print("4. Exit")
+        choice = input("\nPlease enter your choice (1-4): ")
         
         # Start validation process
         if choice == '1':
+            stats['start_time'] = timemodule.time()
+            
             deliveries_file = input("\nEnter the path to the deliveries file (press enter to use data/deliveries.csv): \n")
             try:
                 if not deliveries_file:
@@ -100,7 +114,7 @@ def main():
                 
             try:        
                 print("\nOkay! Do you wish to continue to the optimizer?")
-                continue_optimizer = input("Type 'yes' to continue to the optimizer, or anything else to return to main menu: ")
+                continue_optimizer = input("Type 'yes' to continue to the optimizer, or anything else to exit: ")
         
                 if continue_optimizer.lower() != 'yes':
                     print("Exiting the program.")
@@ -111,8 +125,8 @@ def main():
                 print("==============================")
                 break
             try:
-                run_optimizer()
-                total_distance = run_optimizer()
+                calculate_distance(deliveries='output/valid.csv')
+                total_distance = calculate_distance(deliveries='output/valid.csv')
                 print(f"\nOptimization complete. Total distance for the route: {total_distance:.2f} km")
                 print("These are the optimized routes: output/optimized_route.csv")
                 print("====================================================================================")
@@ -120,9 +134,35 @@ def main():
                 print("====================================================================================")
                 
                 print("\nRoute summary based on transport mode: ")
-                with open('output/optimized_route.csv', 'r') as routefile:
-                    reader = csv.reader(routefile)
+                route_options = calculate_transport_modes(optimized_route_file='output/optimized_route.csv')
+                print("\n")
+                print_route_summary(route_options=route_options)
+                
+                print('\n Do you wanna save the route summary based on transport modes to a CSV file?')
+                save_summary = input("Type 'yes' to save route summary, or anything else to skip: ")
+                if save_summary.lower() == 'yes':
+                    save_route_summary(route_options=route_options, output_file='output/optimized_route_mode.csv')
+                    print("\nRoute summary saved to output/optimized_route_mode.csv")
+                else:
+                    print("\nSkipping saving route summary.")
+                print("==============================")
+                
+                print('\n Finally, choose a transport mode for the final route:')
+                final_mode = input("Enter your choice (Car, Bicycle, Walking): ")
+                if final_mode.capitalize() not in ['Car', 'Bicycle', 'Walking']:
+                    print("Invalid transport mode selected. Please choose from Car, Bicycle, or Walking.")
+                    print("==============================")
+                else:
+                    save_final_route(route_options=route_options, transport_mode=final_mode, output_file='output/final_route.csv')
+                    print(f"\nFinal route saved to output/final_route.csv using {final_mode} as the mode of transport.")
+                    print("==============================")
+                    # Neat print of final route
+                    print(f"\nFinal route using {final_mode} as the mode of transport:")
+                    view_csv_file('output/final_route.csv')
+                stats['end_time'] = timemodule.time()
+                print_stats()
                     
+                
                 
             except Exception as e:
                 print(f"\nAn error occurred during optimization: {e}")
@@ -131,18 +171,59 @@ def main():
          
         # Reset output files   
         elif choice == '2':
+            stats['start_time'] = timemodule.time()
             open('output/valid.csv', 'w').write('customer,latitude,lognitude,priority,weight_kg\n')
             open('output/rejected.csv', 'w').write('customer,latitude,lognitude,priority,weight_kg\n')
             open('output/optimized_route.csv', 'w').write('from_customer,to_customer,distance_km,mode_of_transport,time,cost,emissions_kgCO2\n')
+            open('output/optimized_route_mode.csv', 'w').write('from_customer,to_customer,distance_km,mode_of_transport,time_hrs,cost,emissions_kgCO2\n')
+            open('output/final_route.csv', 'w').write('from_customer,to_customer,distance_km,mode_of_transport,time_hrs,cost,emissions_kgCO2\n')
             print("\nOutput files have been reset.")
             print("==============================")
+            stats['end_time'] = timemodule.time()
+            print_stats()
+        
+        # Open output files manually
+        elif choice == '3':
+            stats['start_time'] = timemodule.time()
+            print("\nSelect the output file to view:")
+            print("1. Valid Deliveries (output/valid.csv)")
+            print("2. Rejected Deliveries (output/rejected.csv)")
+            print("3. Optimized Route (output/optimized_route.csv)")
+            print("4. Optimized Route options (output/optimized_route_mode.csv)")
+            print("5. Final Route (output/final_route.csv)")
+            file_choice = input("Enter your choice (1-5): ")
+            
+            if file_choice == '1':
+                print("\nValid Deliveries:")
+                print("==============================")
+                view_csv_file('output/valid.csv')
+            elif file_choice == '2':
+                print("\nRejected Deliveries:")
+                print("==============================")
+                view_csv_file('output/rejected.csv')
+            elif file_choice == '3':
+                print("\nOptimized Route:")
+                print("==============================")
+                view_csv_file('output/optimized_route.csv')
+            elif file_choice == '4':
+                print("\nOptimized Route Options:")
+                print("==============================")
+                view_csv_file('output/optimized_route_mode.csv')
+            elif file_choice == '5':
+                print("\nFinal Route:")
+                print("==============================")
+                view_csv_file('output/final_route.csv')
+            else:
+                print("\nInvalid choice. Please enter a number between 1 and 5.")
+            stats['end_time'] = timemodule.time()
+            print_stats()
         
         # Exit program
-        elif choice == '3':
+        elif choice == '4':
             print("Exiting the program.")
             break
         else:
-            print("\nInvalid choice. Please enter a number between 1 and 3.")
+            print("\nInvalid choice. Please enter a number between 1 and 4.")
 
 if __name__ == "__main__":
     main()
