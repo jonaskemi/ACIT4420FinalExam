@@ -21,7 +21,7 @@ def calculate_distance(deliveries):
     if not deliveries:
         return []
     
-    with open('output/optimized_route.csv', 'w', newline='') as routefile:
+    with open('SmartCourier/output/optimized_route.csv', 'w', newline='') as routefile:
         writer = csv.writer(routefile)
         writer.writerow(['from_customer', 'to_customer', 'distance_km'])
     
@@ -91,7 +91,7 @@ def calculate_distance(deliveries):
 
 @timed
 def calculate_transport_modes(optimized_route_file):
-    with open('data/transport_modes.json', 'r') as f:
+    with open('SmartCourier/data/transport_modes.json', 'r') as f:
         json_list = json.load(f)
         transport_data = {m['mode']: m for m in json_list}
         
@@ -158,7 +158,7 @@ def calculate_transport_modes(optimized_route_file):
     return route_options
 
 @timed
-def save_route_summary(route_options, output_file='output/optimized_route_mode.csv'):
+def save_route_summary(route_options, output_file='SmartCourier/output/optimized_route_mode.csv'):
     with open(output_file, 'w', newline='') as summaryfile:
         writer = csv.writer(summaryfile)
         writer.writerow(['from_customer', 'to_customer', 'distance_km', 'mode_of_transport', 'time_hrs', 'cost', 'emissions_kgCO2'])
@@ -177,7 +177,7 @@ def save_route_summary(route_options, output_file='output/optimized_route_mode.c
                 ])
      
 @timed           
-def save_final_route(route_options, transport_mode, output_file='output/final_route.csv'):
+def save_final_route(route_options, transport_mode, output_file='SmartCourier/output/final_route.csv'):
     
     with open(output_file, 'w', newline='') as finalfile:
         writer = csv.writer(finalfile)

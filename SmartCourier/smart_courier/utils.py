@@ -2,6 +2,7 @@ import csv
 import time
 import logging
 from functools import wraps
+import os
 
 def view_csv_file(file_path):
     with open(file_path, 'r') as f:
@@ -25,3 +26,7 @@ def timed(func):
         logging.info(f"Function {func.__name__} took {end_time - start_time:.4f} seconds")
         return result
     return wrapper
+
+def clear_screen():
+    """Clear the terminal screen."""
+    os.system('cls' if os.name == 'nt' else 'clear')    

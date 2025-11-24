@@ -42,31 +42,31 @@ SmartCourier/
 
 ### Prerequisites
 - Python 3.7 or higher
-- Virtual environment (recommended)
+- pip package manager
 
 ### Install Dependencies
 
-Install the package and its dependencies:
+1. **Navigate to the SmartCourier directory**:
+   ```bash
+   cd CODE/SmartCourier
+   ```
+
+2. **Install the package in development mode**:
 
 ```bash
 pip install -e .
 ```
+   This will install all dependencies from [`requirements.txt`](requirements.txt).
 
-Or install dependencies manually:
-
-```bash
-pip install -r requirements.txt
-```
 
 ## Usage
 
 ### Running the Application
 
-Run the main application:
-
 ```bash
-python -m smart_courier.main
+python CODE/main.py
 ```
+Select option 1 for Smart Courier
 
 ### Interactive Menu
 
@@ -135,7 +135,7 @@ The system supports three transport modes defined in [data/transport_modes.json]
 
 ## Testing
 
-Run the test suite using pytest:
+Run the test suite using pytest in:
 
 ```bash
 pytest tests/validation_test.py
@@ -188,13 +188,14 @@ Structured log file using logging module
 ## Example Workflow
 
 1. Prepare your delivery data in CSV format
-2. Run the application: `python -m smart_courier.main`
-3. Select option 1 to start validation
-4. Review validated and rejected deliveries
-5. Proceed to optimization
-6. View route summaries for all transport modes
-7. Select your preferred transport mode
-8. Review the final optimized route
+2. Run the main file in CODE folder: `python main.py`
+3. Select Smart Courier package
+4. Select option 1 to start validation
+5. Review validated and rejected deliveries
+6. Proceed to optimization
+7. View route summaries for all transport modes
+8. Select your preferred transport mode
+9. Review the final optimized route
 
 ## Module Reference
 
@@ -205,13 +206,16 @@ Contains regex patterns and validation functions for input data.
 Core optimization logic including:
 - [`haversine`](smart_courier/optimizer.py): Distance calculation
 - [`calculate_distance`](smart_courier/optimizer.py): Route optimization
-- [`calculate_transport_modes`](smart_courier/optimizer.py): Multi-mode analysis
+- [`calculate_transport_modes`](smart_courier/optimizer.py): Calculates distance, time, cost and emissions for every transportation mode.
+- ['save_route_summary'](smart_courier/optimizer.py): Option to save the route summary for every transportation mode
 - [`save_final_route`](smart_courier/optimizer.py): Output generation
+- [`print_route_summary`](smart_courier/optimizer.py): Prints the route summary for every transportation mode
 
 ### [`utils.py`](smart_courier/utils.py)
 Helper functions:
 - [`timed`](smart_courier/utils.py): Decorator for execution timing
 - [`view_csv_file`](smart_courier/utils.py): CSV file display utility
+- ['clear_screen'](smart_courier/utils.py): Terminal clear to improve usability
 
 ### [`main.py`](smart_courier/main.py)
 Entry point with interactive CLI menu and workflow orchestration.
@@ -226,16 +230,23 @@ The application handles:
 - Invalid priority values
 - Negative weights
 
-All errors are logged and invalid entries are saved to [output/rejected.csv](output/rejected.csv).
-
 ## Development
 
 To extend the system:
 - Add new transport modes to [data/transport_modes.json](data/transport_modes.json)
-- Modify validation rules in [`validation.py`](smart_courier/validation.py)
-- Implement new optimization algorithms in [`optimizer.py`](smart_courier/optimizer.py)
-- Add new tests in the `tests/` directory
+- Implement new or other optimization algorithms in [`optimizer.py`](smart_courier/optimizer.py)
+- Add new or more tests in the `tests/` directory
+
+## Author
+
+**Jonas Lysfjord Kemi**  
+OsloMet - Oslo Metropolitan University  
+Course: Scripting with Python (H-25)
 
 ## License
 
 This project was developed as part of a Python scripting course final exam.
+
+---
+
+**Note**: Due to file path handling, packages should be run through the main launcher (`main.py`) rather than individually.
