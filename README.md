@@ -159,15 +159,14 @@ python main.py
 ## Testing
 
 ### Run All Tests
-
 ```bash
 # Test SmartCourier
-cd SmartCourier
-python -m pytest tests/ -v
+python -m pytest smartcourier/tests/ -v
+```
 
+```bash
 # Test GameOfLife
-cd ../GameOfLife
-python -m pytest tests/ -v
+python -m pytest gameoflife/tests/ -v
 ```
 
 ### Test Coverage
@@ -175,6 +174,7 @@ python -m pytest tests/ -v
 Both packages include comprehensive unit tests:
 - **SmartCourier**: Validation functions, regex patterns
 - **GameOfLife**: Grid operations, pattern loading, evolution rules
+
 
 ## Dependencies
 

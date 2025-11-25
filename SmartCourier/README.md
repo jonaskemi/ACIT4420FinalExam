@@ -138,13 +138,10 @@ The system supports three transport modes defined in [data/transport_modes.json]
 Run the test suite using pytest in:
 
 ```bash
-pytest tests/validation_test.py
+python -m pytest smartcourier/tests/ -v
 ```
-
-Or run all tests:
-
 ```bash
-pytest
+python -m pytest gameoflife/tests/ -v
 ```
 
 ### Test Coverage

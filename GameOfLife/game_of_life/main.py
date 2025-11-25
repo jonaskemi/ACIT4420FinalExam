@@ -38,7 +38,7 @@ def main():
     
     grid.load_pattern(pattern, offset_row=offset_row, offset_col=offset_col)
     
-    print("Initial Grid:")
+    print("Initial Grid:") 
     grid.display()
     
     generation = 0

@@ -51,10 +51,6 @@ class Grid:
         if 0 <= row < self.rows and 0 <= col < self.cols:
             return self.grid[row][col]
         return 0  # Treat out-of-bounds as dead cells
-    
-    def set_cell(self, row, col, state):
-        if 0 <= row < self.rows and 0 <= col < self.cols:
-            self.grid[row][col] = state
             
     def evolve(self):
         self.grid = Rules.evolve_grid(self.grid)

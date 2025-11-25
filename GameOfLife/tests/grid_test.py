@@ -35,16 +35,15 @@ def test_load_pattern_out_of_bounds():
     with pytest.raises(Exception):
         grid.load_pattern(pattern, offset_row=4, offset_col=4)
         
-def test_set_and_get_cell():
-    grid = Grid(3, 3)
-    grid.set_cell(1, 1, 1)
-    assert grid.get_cell(1, 1) == 1
-    assert grid.get_cell(0, 0) == 0
-    assert grid.get_cell(3, 3) == 0  # Out of bounds should return 0
     
 def test_clear_grid():
     grid = Grid(3, 3)
-    grid.set_cell(1, 1, 1)
+    
+    pattern =  [[1, 1, 1], 
+                [1, 1, 1], 
+                [1, 1, 1]]
+    grid.load_pattern(pattern, offset_row=0, offset_col=0)
+    
     grid.clear()
     assert all(cell == 0 for row in grid.grid for cell in row)
     
