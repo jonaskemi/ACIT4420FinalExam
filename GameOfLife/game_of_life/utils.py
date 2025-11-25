@@ -20,7 +20,6 @@ class PatternLoadError(Exception):
     pass
 
 def load_pattern_from_txt(filepath):
-    """Load pattern from TXT file and convert to 2D grid."""
     try:
         with open(filepath, 'r') as f:
             lines = f.readlines()
@@ -57,5 +56,4 @@ def load_pattern_from_txt(filepath):
         raise PatternLoadError(f"Error loading pattern: {e}")
     
 def clear_screen():
-    """Clear the terminal screen."""
     os.system('cls' if os.name == 'nt' else 'clear')    
