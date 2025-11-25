@@ -7,9 +7,9 @@ def read_requirements():
         return f.read().splitlines()
     
 setup(
-    name="smart_courier",
+    name="game_of_life",
     version="1.0.0",
-    description="A courier delivery management system",
+    description="A Game of Life python simulation",
     author="Jonas Kemi",
     packages=find_packages(),
     install_requires=read_requirements(),

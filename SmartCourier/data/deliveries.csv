@@ -1,8 +1,8 @@
-customer, latitude, longitude, priority, weight_kg
-oslomet, 59.01, 10.12, high, 20
-northfish, 68.24, 13.22, medium, 45
-oilers, 59.12, 5.88, low, 12.4
-woodchuck, 60.45, 12.87, high, 110
-notaplace, 92.09, -120.99, medium, 2
-notrightpriority, 12.67, 172.45, fast, 17
-negativeweight, 59.44, 11.22, medium, -12 
+customer,latitude,longitude,priority,weight_kg
+oslomet,59.91975231772749,10.735437671046288,high,20
+northfish,68.13330290294708,13.436546727334079,medium,45
+oilers,58.95400253440023,5.690332621833003,low,12.4
+woodchuck,59.675164310475026,10.244233690588041,high,110
+notaplace,92.09400253440023,-120.995437671046288,medium,2
+notrightpriority,10.288706820377982,170.86921180657245,fast,17
+negativeweight,6.723224022901573,-11.256755035598138,medium,-12 
